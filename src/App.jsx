@@ -7,7 +7,8 @@ import { Route,Routes } from 'react-router-dom'
 import Cart from './pages/cart'
 import Store from './pages/store'
 import Authenticate from './pages/authenticate '
-
+import RegisterForm from './components/register-form/register-form'
+import LogInForm from './components/login-form/login-form'
 function App() {
   
 
