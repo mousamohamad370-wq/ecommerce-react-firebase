@@ -1,6 +1,7 @@
 import { Link , useLocation,useNavigate } from "react-router-dom";
 import { isCartSelected,isStoreSelected } from "../../../utils/checkRoutes";
 
+
 function MobailMenu({closefn}){
       const Loc= useLocation();
          const navigate =useNavigate();
@@ -20,7 +21,7 @@ function MobailMenu({closefn}){
         ${isCartSelected(Loc.pathname)&&"mobail-menu__content__item--selected"}`}>cart</Link>
 
 
-        <button onClick={()=> {navigate('/Authenticate');
+        <button onClick={()=> {navigate('/authenticate');
             closefn()}
         }className="mobail-menu__content__btn">login</button>
             </div>

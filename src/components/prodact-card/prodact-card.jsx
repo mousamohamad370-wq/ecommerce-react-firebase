@@ -1,9 +1,19 @@
-import { useState } from "react";
+import { useState} from "react";
 import { products } from "../../utils/prodacts";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { MainContext } from "../../utils/context";
 
 function ProductCard({product}){
     const {id,name,price,wasPrice,imageURL,description}= product;
+const navigate = useNavigate();
+  const { user } = useContext(MainContext);
 
+  const redirectToLogin = () => {
+    navigate("/authenticate");
+  };
+
+  const addToCart = () => {};
     return(
         <div className="product-card">
             <div className="product-card__content">
@@ -16,7 +26,7 @@ function ProductCard({product}){
                 </div>
                 <div className="product-card__content__discrabtion">{description}</div>
             </div>
-            <button className="product-card__btn">add to cart</button>
+            <button onClick={user ? addToCart: redirectToLogin } className="product-card__btn">add to cart</button>
         </div>
     )
 

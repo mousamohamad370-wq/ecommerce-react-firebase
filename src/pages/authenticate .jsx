@@ -1,25 +1,33 @@
 import LogInForm from "../components/login-form/login-form";
 import RegisterForm from "../components/register-form/register-form";
-import { useState } from "react";
+import { useState,useContext,useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { MainContext } from "../utils/context";
+
 function Authenticate(){
 
     const[registerMode,setRegisterMode]=useState(false);
-const [formData,setFormData]=useState({
-username:"",
-email:"",
-password:"",
+      const { user, loading } = useContext(MainContext);
+  const navigate = useNavigate();
 
-});
+  useEffect(() => {
+   if( !loading && user && navigate("/"));
+    // else( loading && !user && navigate("/authenticate"));
+  
+
+}, [loading, user]);
+
+
+
     return registerMode ? ( 
     <div className="authenticate">
 <RegisterForm
- formData={formData}
-    setFormData={setFormData}/>
+/>
 <p>
     Already have an acount?
-    <b onClick={()=>setRegisterMode(false)}className="authenticate__anchor">
+    <button onClick={()=>setRegisterMode(false)}className="authenticate__anchor">
      Login
-</b>
+</button>
     </p>
 
 
@@ -28,13 +36,12 @@ password:"",
    ) :(
       <div className="authenticate">
 <LogInForm
-formData={formData}
-    setFormData={setFormData}/>
+/>
 <p>
     Dont have an acount?
-    <b onClick={()=>setRegisterMode(true)} className="authenticate__anchor">
+    <button onClick={()=>setRegisterMode(true)} className="authenticate__anchor">
      Register
-</b>
+</button>
     </p>
 
 

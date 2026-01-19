@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "../../utils/firebase-functions";
 
-function RegisterForm({formData,setformData}) {
-
+function RegisterForm() {
+  const [formData,setformData]=useState({
+    username:"",
+    email:"",
+    password:"",
+  })
+const [err ,seterr] =useState(null)
   const navigate=useNavigate();
 
-  const handleInputChange = (e) => {
+  const handleformDataChange = (e) => {
     const { name, value } = e.target;
     setformData({
       ...formData,
@@ -13,7 +19,19 @@ function RegisterForm({formData,setformData}) {
     });
   };
 
-const handleRegister=async (e)=>{};
+const handleRegister=async (e)=>{
+  e.preventDefault()
+  const res =await registerUser(
+    formData.username,
+    formData.email,
+    formData.password)
+if(res.succses){
+  navigate('/');
+}
+else{
+seterr(res.err)
+}
+};
   return (
     <form onSubmit={handleRegister} className="form">
       <h2 className="form__title">Create an account</h2>
@@ -23,7 +41,7 @@ const handleRegister=async (e)=>{};
         </label>
         <input
           className="form__input"
-          onChange={handleInputChange}
+          onChange={handleformDataChange}
           value={formData.username}
           type="text"
           name="username"
@@ -37,7 +55,7 @@ const handleRegister=async (e)=>{};
         </label>
         <input
           className="form__input"
-          onChange={handleInputChange}
+          onChange={handleformDataChange}
           value={formData.email}
           type="email"
           name="email"
@@ -51,7 +69,7 @@ const handleRegister=async (e)=>{};
         </label>
         <input
           className="form__input"
-          onChange={handleInputChange}
+          onChange={handleformDataChange}
           value={formData.password}
           type="password"
           name="password"
@@ -59,6 +77,7 @@ const handleRegister=async (e)=>{};
           placeholder="Enter your password"
         />
       </div>
+      {err && <div className="form-err">{err} </div>}
   
       <button className="form__button primary" type="submit">
         Register

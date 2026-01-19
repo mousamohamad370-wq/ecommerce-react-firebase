@@ -1,11 +1,27 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { signInUser } from "../../utils/firebase-functions";
 
-function LogInForm({formData,setformData}) {
+function LogInForm() {
+   const navigate =useNavigate(); 
+    const [err ,seterr] =useState(null)
+    const [email,setemail]=useState();
+    const [password,setpassword]=useState();
+
+ 
 
 
-  const handleLogin = async (e) => {};
-  const navigate =useNavigate(); 
+  const handleLogin = async (e) => {
+e.preventDefault();
+const res =await signInUser(email,password);
+if(res.succes){
+  navigate('/');
+}
+else{
+  seterr(res.err);
+}
+  };
+ 
 
   return (
     <form onSubmit={handleLogin} className="form">
@@ -16,8 +32,8 @@ function LogInForm({formData,setformData}) {
         </label>
         <input
           className="form__input"
-          onChange={(e) => setformData({...formData,email:e.target.value})}
-          value={formData.email}
+          onChange={(e) => setemail(e.target.value)}
+          value={email}
           type="email"
           id="email"
           required
@@ -30,14 +46,15 @@ function LogInForm({formData,setformData}) {
         </label>
         <input
           className="form__input"
-          onChange={(e) => setformData({...formData, password:e.target.value})}
-          value={formData.password}
+          onChange={(e) => setpassword(e.target.value)}
+          value={password}
           id="password"
           required
           type="password"
           placeholder="Enter your password"
         />
       </div>
+       {err && <div className="form-err">{err} </div>}
 
       <button className="form__button primary" type="submit">
         Log in
