@@ -6,7 +6,7 @@ import { signOutUser } from "../../../utils/firebase-functions";
 import { TailSpin } from "react-loader-spinner";
 
 function DesktobMenu(){
-    const{ user,loading}=useContext(MainContext)
+    const{ user,loading,cartproduct}=useContext(MainContext)
     const Loc= useLocation();
       const signOut = async () => {
     await signOutUser();
@@ -21,9 +21,23 @@ function DesktobMenu(){
       store</Link>
 
 
-        <Link to="/cart" className={`navbar__right-side__item 
-        ${isCartSelected(Loc.pathname)&&"navbar__right-side__item--selected"}`}>cart</Link>
-
+         <div className="navbar__right-side__item">
+        <Link
+          to="/cart"
+          className={`navbar__right-side__item navbar__right-side__item--cart-count
+              ${
+                isCartSelected(Loc.pathname) &&
+                "navbar__right-side__item--selected"
+              }`}
+        >
+          Cart
+        </Link>
+        {user && cartproduct && (
+          <div className="navbar__right-side__cart-count">
+            {cartproduct.length}
+          </div>
+        )}
+      </div>
     {loading ? (
         <TailSpin
           height="30"

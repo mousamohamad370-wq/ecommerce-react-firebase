@@ -33,6 +33,9 @@
         &:hover{
             opacity: 1;
         }
+         &--cart-count {
+        padding: 0 10px 0 0;
+      }
         &__btn{
             background-color: rgb(207, 199, 199);
             &:hover{
@@ -43,6 +46,12 @@
             font-weight: 900;
             opacity: 1;
         }
+    }
+      &__cart-count {
+      border-radius: 50%;
+      background-color: $color-primary;
+      color: white;
+      padding: 5px 10px;
     }
 
 }

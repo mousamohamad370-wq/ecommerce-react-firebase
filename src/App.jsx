@@ -10,30 +10,49 @@ import Authenticate from './pages/authenticate '
 import RegisterForm from './components/register-form/register-form'
 import LogInForm from './components/login-form/login-form'
 import {useAuthState} from "react-firebase-hooks/auth"
-import { auth } from './utils/firebase-config'
+import { auth ,database} from './utils/firebase-config'
 import {MainContext}from"./utils/context"
 import { fetchUserData } from './utils/firebase-functions'
+import{setupDBListener} from"./utils/firebase-functions"
+import { products } from './utils/prodacts'
+import ProductCard from './components/prodact-card/prodact-card'
+import { onSnapshot } from 'firebase/firestore'
+
 function App() {
   const [user,loading]=useAuthState(auth);
+  const [cartproduct,setcartproduct]  =useState([]);
+  const [username,setusername]  =useState();
+  const filteredproduct = products.filter(
+  (product) =>
+    !cartproduct?.some((cartItem) => cartItem?.id === product.id)
+);
+  useEffect(() => {
+    user && fetchUser();
+  }, [user]);
 
-  useEffect(()=>{
-    user&&fetchUser();
-
-  },[user]);
-  
-  
-  const fetchUser=async()=>{
-
-    const res=await fetchUserData(user);
-    if(res.success){
-console.log(res.data)
+  useEffect(() => {
+    if (!loading && user) {
+      setupDBListener(user, (data=[]) => {
+        const updatedProduct = products.filter((product) => {
+          return !data?.some((cartproduct) => cartproduct?.id === product.id);
+        });
+        setcartproduct(data);
+      });
     }
-  }
-  
+  }, [loading, user]);
+  const fetchUser = async () => {
+    const res = await fetchUserData(user);
+    if (res.success) {
+      console.log(res);
+      setusername(res.data.username);
+      setcartproduct(res.data.cartproduct);
+    }
+  };
+
 
   return (
 <>
-<MainContext.Provider value={{user,loading}}>
+<MainContext.Provider value={{user, loading, cartproduct,filteredproduct, username}}>
 <Navbar/>
 <Routes>
   <Route path="/" element={<Store/>}></Route>
@@ -46,4 +65,4 @@ console.log(res.data)
   )
 }
 
-export default App
+export default App;
